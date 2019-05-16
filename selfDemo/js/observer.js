@@ -6,8 +6,8 @@ function defineReactive (data, key, val) {
     enumerable: true,
     configurable: true,
     get: function () {
-      if () {
-        dep.addSub(watcher) //  在这里添加一个订阅者
+      if (Dep.target) {
+        dep.addSub(Dep.target) //  在这里添加一个订阅者
       }
       return val
     },
