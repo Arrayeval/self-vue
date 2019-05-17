@@ -1,5 +1,5 @@
  
-    
+import Watcher from './watcher'
 function Compile(el, vm) {
     this.vm = vm;
     this.el = document.querySelector(el);
@@ -59,3 +59,4 @@ Compile.prototype = {
     }
 }
  
+export default Compile

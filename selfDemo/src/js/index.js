@@ -1,3 +1,7 @@
+import Compile from './compile'
+import Observe from './observer'
+
+console.log(Compile)
 function SelfVue (options) {
     var self = this
     this.vm = this;
@@ -7,12 +11,7 @@ function SelfVue (options) {
         self.proxyKeys(key)
     }) 
 
-    observe(this.data)
-    // el.innerHTML = this.data[exp]
-    // new Watcher(this, exp, function (value) {
-    //     console.log(this)
-    //     el.innerHTML = value
-    // });
+    Observe(this.data)
     new Compile(options.el, this.vm);
     return this;
 }
@@ -32,3 +31,5 @@ SelfVue.prototype = {
         })
     }
 }
+
+export default SelfVue
