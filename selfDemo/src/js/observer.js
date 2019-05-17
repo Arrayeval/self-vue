@@ -1,4 +1,5 @@
 // 监听器：监听对象属性的变化
+import Dep from "./Dep"
 function defineReactive (data, key, val) {
   observe(val);
   var dep = new Dep();// 消息订阅器
@@ -25,17 +26,4 @@ function observe (data) {
   })
 }
 
-// 订阅器
-function Dep () {
-  this.subs = []
-}
-Dep.prototype = {
-  addSub: function (sub) {
-    this.subs.push(sub)
-  },
-  notify: function () {
-    this.subs.forEach(function (sub) {
-      sub.update()
-    })
-  }
-}
+export default observe
