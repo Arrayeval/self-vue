@@ -1,16 +1,13 @@
 import Compile from './compile'
 import Observe from './observer'
 
-console.log(Compile)
 function SelfVue (options) {
     var self = this
     this.vm = this;
     this.data = options.data
-
     Object.keys(this.data).forEach(function (key) {
         self.proxyKeys(key)
     }) 
-
     Observe(this.data)
     new Compile(options.el, this.vm);
     return this;

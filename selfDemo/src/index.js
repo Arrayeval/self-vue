@@ -1,4 +1,4 @@
-import SelfVue from "./js"
+import SelfVue from "evel-vue"
 // var ele = document.querySelector('#name');
 var selfVue = new SelfVue({
   el: "#app",
