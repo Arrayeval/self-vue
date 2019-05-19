@@ -1,17 +1,19 @@
-import SelfVue from "evel-vue"
-// var ele = document.querySelector('#name');
-var selfVue = new SelfVue({
-  el: "#app",
+// import SelfVue from "evel-vue"
+import SelfVue from "./js/index.js"
+new SelfVue({
+  el: '#app',
   data: {
     title: 'hello world',
-    name: ''
+    name: 'canfoo'
+  },
+  methods: {
+    clickMe: function () {
+      this.title = 'hello worldrr';
+    }
+  },
+  mounted: function () {
+    window.setTimeout(() => {
+      this.title = '你好';
+    }, 1000);
   }
 });
-
-window.setTimeout(function () {
-  selfVue.title = 'test';
-}, 2000);
-
-window.setTimeout(function () {
-  selfVue.name = 'canfoo';
-}, 2500);

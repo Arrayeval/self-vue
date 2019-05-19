@@ -5,11 +5,14 @@ function SelfVue (options) {
     var self = this
     this.vm = this;
     this.data = options.data
+    this.methods = options.methods
     Object.keys(this.data).forEach(function (key) {
         self.proxyKeys(key)
     }) 
     Observe(this.data)
     new Compile(options.el, this.vm);
+    
+    options.mounted.call(this)
     return this;
 }
 

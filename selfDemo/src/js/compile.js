@@ -27,15 +27,58 @@ Compile.prototype = {
         }
         return fragment;
     },
+    compile: function (node) {
+        var nodeAttrs = node.attributes;
+        var self = this;
+        Array.prototype.forEach.call(nodeAttrs, function (attr) {
+            var attrName = attr.name
+            if (self.isDirective(attrName)) {
+                var exp = attr.value
+                var dir = attrName.substring(2)
+                if (self.isEventDirective(dir)) { // 事件指令
+                    self.compileEvent(node, self.vm, exp, dir)
+                } else { // v-model
+                    self.compileModel(node, self.vm, exp, dir)
+                }
+                node.removeAttribute(attrName)
+            }
+        })
+    },
+    compileEvent: function (node, vm, exp, dir) {
+        var eventType = dir.split(":")[1]
+        var cb = vm.methods && vm.methods[exp] //??
+        if (eventType && cb) {
+            node.addEventListener(eventType, cb.bind(vm), false)
+        }
+    },
+    compileModel: function (node, vm, exp, dir) {
+        var self = this
+        var val = this.vm[exp]
+        this.modeUpdater(node, val)
+        new Watcher(this.vm, exp, function (value) {
+            self.modeUpdater(node, value)
+        })
+        node.addEventListener('input', function (e) {
+            var newValue = e.target.value
+            if (val === newValue) {
+                return 
+            }
+            self.vm[exp] = newValue
+            val = newValue
+        })
+    },
     compileElement: function (el) {
         var childNodes = el.childNodes;
         var self = this;
         [].slice.call(childNodes).forEach(function(node) {
             var reg = /\{\{\s*(.*?)\s*\}\}/;
             var text = node.textContent;
-            if (self.isTextNode(node) && reg.test(text)) {  // 判断是否是符合这种形式{{}}的指令
+            if (self.isElementNode(node)) {  
+                self.compile(node);
+            } else if (self.isTextNode(node) && reg.test(text)) {
                 self.compileText(node, reg.exec(text)[1]);
             }
+
             if (node.childNodes && node.childNodes.length) {
                 self.compileElement(node);  // 继续递归遍历子节点
             }
@@ -54,6 +97,19 @@ Compile.prototype = {
     },
     isTextNode: function(node) {
         return node.nodeType == 3;
+    },
+
+    modeUpdater: function (node, value, oldValue) {
+        node.value = typeof value == 'undefined' ? '' : value
+    },
+    isDirective: function (attr) {
+        return attr.indexOf("v-") == 0
+    },
+    isEventDirective: function (dir) {
+        return dir.indexOf('on:') === 0
+    },
+    isElementNode: function (node) {
+        return node.nodeType === 1
     }
 }
  
