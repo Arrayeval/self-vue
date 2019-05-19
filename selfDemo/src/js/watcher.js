@@ -20,7 +20,7 @@ Watcher.prototype = {
   },
   get () {
     Dep.target = this
-    var value = this.vm.data[this.exp]
+    var value = this.vm.data[this.exp] // 读取一个对象中的属性会触发 Object.defineProperty 的get方法
     Dep.target = null
     return value
   }
